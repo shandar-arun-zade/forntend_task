@@ -3,6 +3,8 @@ import userImage from './assets/userImage.png';
 import { FaUser } from "react-icons/fa6";
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { useForm } from '@tanstack/react-form';
+import { useNavigate } from '@tanstack/react-router';
+
 
 function App() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,12 +12,16 @@ function App() {
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const [hint, setHint] = useState([]);
+  const hintArr = ['Weak', 'Fair', 'Good', 'Strong'];
+
+  const navigate = useNavigate()
 
   const form = useForm({
     userName: "",
     password: "",
     onSubmit: (values) => {
-      alert(`Thank you for submitting the form !`)
+      // alert(`Thank you for submitting the form !`)
+      navigate({to:'/home'})
     },
   });
 
@@ -23,8 +29,11 @@ function App() {
     let strength = 0;
     const hint = [];
 
-    if (password.length >= 8) strength++;
-    else hint.push("Password should contain at least 8 characters.");
+    if (password.length >= 8) {
+      strength++;
+    }else {
+      hint.push("Password should contain at least 8 characters.");
+    }
 
     if (/[A-Z]/.test(password)) {
       strength++
@@ -181,7 +190,7 @@ function App() {
                       ></div>
                     </div>
                     <p className="mt-2 text-white">
-                      {['Weak', 'Fair', 'Good', 'Strong'][passwordStrength - 1] }
+                      {hintArr[passwordStrength - 1] }
                     </p>
                   </div>
 
@@ -196,10 +205,11 @@ function App() {
                     hover:bg-sky-600 focus:outline-none focus:ring-2 
                     focus:ring-sky-500 transition-all duration-300"
           >
-            Login
+            Log in
           </button>
         </form>
       </div>
+      
     </div>
   );
 }
