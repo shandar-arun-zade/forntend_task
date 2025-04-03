@@ -15,6 +15,7 @@ import { Route as HomeImport } from './routes/home'
 import { Route as AboutImport } from './routes/about'
 import { Route as ImageGallaryImport } from './routes/Image-gallary'
 import { Route as IndexImport } from './routes/index'
+import { Route as ImageGallaryIdImport } from './routes/Image-gallary.$id'
 
 // Create/Update Routes
 
@@ -40,6 +41,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const ImageGallaryIdRoute = ImageGallaryIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ImageGallaryRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -74,52 +81,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeImport
       parentRoute: typeof rootRoute
     }
+    '/Image-gallary/$id': {
+      id: '/Image-gallary/$id'
+      path: '/$id'
+      fullPath: '/Image-gallary/$id'
+      preLoaderRoute: typeof ImageGallaryIdImport
+      parentRoute: typeof ImageGallaryImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface ImageGallaryRouteChildren {
+  ImageGallaryIdRoute: typeof ImageGallaryIdRoute
+}
+
+const ImageGallaryRouteChildren: ImageGallaryRouteChildren = {
+  ImageGallaryIdRoute: ImageGallaryIdRoute,
+}
+
+const ImageGallaryRouteWithChildren = ImageGallaryRoute._addFileChildren(
+  ImageGallaryRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/Image-gallary': typeof ImageGallaryRoute
+  '/Image-gallary': typeof ImageGallaryRouteWithChildren
   '/about': typeof AboutRoute
   '/home': typeof HomeRoute
+  '/Image-gallary/$id': typeof ImageGallaryIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/Image-gallary': typeof ImageGallaryRoute
+  '/Image-gallary': typeof ImageGallaryRouteWithChildren
   '/about': typeof AboutRoute
   '/home': typeof HomeRoute
+  '/Image-gallary/$id': typeof ImageGallaryIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/Image-gallary': typeof ImageGallaryRoute
+  '/Image-gallary': typeof ImageGallaryRouteWithChildren
   '/about': typeof AboutRoute
   '/home': typeof HomeRoute
+  '/Image-gallary/$id': typeof ImageGallaryIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/Image-gallary' | '/about' | '/home'
+  fullPaths: '/' | '/Image-gallary' | '/about' | '/home' | '/Image-gallary/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/Image-gallary' | '/about' | '/home'
-  id: '__root__' | '/' | '/Image-gallary' | '/about' | '/home'
+  to: '/' | '/Image-gallary' | '/about' | '/home' | '/Image-gallary/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/Image-gallary'
+    | '/about'
+    | '/home'
+    | '/Image-gallary/$id'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ImageGallaryRoute: typeof ImageGallaryRoute
+  ImageGallaryRoute: typeof ImageGallaryRouteWithChildren
   AboutRoute: typeof AboutRoute
   HomeRoute: typeof HomeRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ImageGallaryRoute: ImageGallaryRoute,
+  ImageGallaryRoute: ImageGallaryRouteWithChildren,
   AboutRoute: AboutRoute,
   HomeRoute: HomeRoute,
 }
@@ -144,13 +179,20 @@ export const routeTree = rootRoute
       "filePath": "index.jsx"
     },
     "/Image-gallary": {
-      "filePath": "Image-gallary.jsx"
+      "filePath": "Image-gallary.jsx",
+      "children": [
+        "/Image-gallary/$id"
+      ]
     },
     "/about": {
       "filePath": "about.jsx"
     },
     "/home": {
       "filePath": "home.jsx"
+    },
+    "/Image-gallary/$id": {
+      "filePath": "Image-gallary.$id.jsx",
+      "parent": "/Image-gallary"
     }
   }
 }
