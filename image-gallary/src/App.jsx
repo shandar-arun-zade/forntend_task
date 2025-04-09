@@ -24,7 +24,7 @@ function App() {
     userName: "",
     password: "",
     onSubmit: (values) => {
-      // alert(`Thank you for submitting the form !`)
+      // alert(`Thank you for submitting the form ! userName: ${values.value.userName} password: ${values.value.password}`);
       navigate({to:'/home'})
 
     },
@@ -68,18 +68,18 @@ function App() {
   };
 
   
-
   return (
     <div className="min-h-screen flex justify-center items-center  ">
-      <div className="border-3 border-gray-600 text-sky-400 text-center px-6 py-8 
-                      rounded-2xl shadow-2xl justify-center items-center min-w-sm">
+      <div className="border-transparent bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 p-[1px]  
+                     shadow-2xl justify-center items-center min-w-sm rounded-2xl text-center">
+      <div className='bg-[#00010d] p-8 rounded-2xl'>           
         <div className="flex justify-center mb-6">
           <img src={userImage} alt="userImage" className='w-24' />
         </div>
         <h1 className="text-4xl text-white mb-6 font-bold">Login Form</h1>
 
         <form onSubmit={(e) => {
-          e.preventDefault();
+          // e.preventDefault();
           form.handleSubmit();
         }}>
 
@@ -206,13 +206,14 @@ function App() {
 
           <button
             type="submit"
-            className="font-bold text-xl w-full py-3 bg-sky-500 text-white rounded-lg
-                    hover:bg-sky-600 focus:outline-none focus:ring-2 
-                    focus:ring-sky-500 transition-all duration-300"
-          >
+            className="font-bold text-xl w-full py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full 
+                        transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-gradient-to-r 
+                      hover:from-cyan-600 hover:to-purple-700 hover:text-gray-100"
+            >
             Log in
           </button>
         </form>
+      </div>
       </div>
       
     </div>

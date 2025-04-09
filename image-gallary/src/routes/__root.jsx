@@ -18,6 +18,19 @@ export const Route = createRootRoute({
       <hr /> */}
       <Outlet />
       <TanStackRouterDevtools />
+      {/* <hr />
+      <div className="p-2 flex gap-2 justify-center text-sm text-gray-500">
+        <Link to="/" className="[&.active]:font-bold">
+          Home
+        </Link>{' '}
+        <Link to="/about" className="[&.active]:font-bold">
+          About
+        </Link>
+        <Link to="/home" className="[&.active]:font-bold">
+          Home 2
+        </Link>
+      </div> */}
+      
     </>
   ),
 })
