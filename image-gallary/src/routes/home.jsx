@@ -8,7 +8,7 @@ export const Route = createFileRoute('/home')({
 function RouteComponent() {
   const navigate = useNavigate();
   const handleHomeRoute = () => navigate({ to: '/' });
-  const handleImageRoute = () => navigate({ to: '/image-gallary' });
+  const handleImageRoute = () => navigate({ to: '/image-gallery' });
   const router = useRouter();
 
   const handlePreFetch = () => {
