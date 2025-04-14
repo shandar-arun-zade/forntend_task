@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useNavigate } from '@tanstack/react-router'
-import { getImageById } from '../../service/image.service'
+import {getImageById} from '../../service/image.service' 
+
 
 export const Route = createFileRoute('/image-gallery/$imgId')({
   component: RouteComponent,

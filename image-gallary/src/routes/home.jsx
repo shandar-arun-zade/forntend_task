@@ -1,5 +1,7 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
+// import Header from '../components/header';
+// import Footer from '../components/Footer';
 
 export const Route = createFileRoute('/home')({
   component: RouteComponent,
@@ -20,7 +22,11 @@ function RouteComponent() {
   };
 
   return (
+    <>
+    
+    {/* <Header /> */}
     <div className="min-h-screen flex items-center justify-center p-6">
+      
       <div className="text-center max-w-md sm:max-w-lg p-6 sm:p-8 bg-gradient-to-br from-[#0e0b14] to-[#1f2630] rounded-2xl shadow-2xl transition-all duration-500 transform hover:scale-105 hover:shadow-xl">
         <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 mb-6 sm:mb-8 tracking-tight leading-tight">
           Welcome to the Image Gallery Page
@@ -51,5 +57,7 @@ function RouteComponent() {
         </div>
       </div>
     </div>
+    {/* <Footer /> */}
+    </>
   );
 }

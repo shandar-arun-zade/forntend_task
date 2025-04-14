@@ -8,33 +8,28 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as HomeImport } from './routes/home'
+import { Route as AppLayoutRouteImport } from './routes/appLayout/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as ImageGalleryIndexImport } from './routes/image-gallery/index'
-import { Route as UserUserImport } from './routes/user/user'
-import { Route as UserProfileImport } from './routes/user/profile'
 import { Route as ImageGalleryImgIdImport } from './routes/image-gallery/$imgId'
-
-// Create Virtual Routes
-
-const PostLazyImport = createFileRoute('/post')()
+import { Route as AppLayoutSettingImport } from './routes/appLayout/setting'
+import { Route as AppLayoutUserIndexImport } from './routes/appLayout/user/index'
 
 // Create/Update Routes
-
-const PostLazyRoute = PostLazyImport.update({
-  id: '/post',
-  path: '/post',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/post.lazy').then((d) => d.Route))
 
 const HomeRoute = HomeImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AppLayoutRouteRoute = AppLayoutRouteImport.update({
+  id: '/appLayout',
+  path: '/appLayout',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -50,22 +45,22 @@ const ImageGalleryIndexRoute = ImageGalleryIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const UserUserRoute = UserUserImport.update({
-  id: '/user/user',
-  path: '/user/user',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const UserProfileRoute = UserProfileImport.update({
-  id: '/user/profile',
-  path: '/user/profile',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const ImageGalleryImgIdRoute = ImageGalleryImgIdImport.update({
   id: '/image-gallery/$imgId',
   path: '/image-gallery/$imgId',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AppLayoutSettingRoute = AppLayoutSettingImport.update({
+  id: '/setting',
+  path: '/setting',
+  getParentRoute: () => AppLayoutRouteRoute,
+} as any)
+
+const AppLayoutUserIndexRoute = AppLayoutUserIndexImport.update({
+  id: '/user/',
+  path: '/user/',
+  getParentRoute: () => AppLayoutRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -79,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/appLayout': {
+      id: '/appLayout'
+      path: '/appLayout'
+      fullPath: '/appLayout'
+      preLoaderRoute: typeof AppLayoutRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/home': {
       id: '/home'
       path: '/home'
@@ -86,32 +88,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeImport
       parentRoute: typeof rootRoute
     }
-    '/post': {
-      id: '/post'
-      path: '/post'
-      fullPath: '/post'
-      preLoaderRoute: typeof PostLazyImport
-      parentRoute: typeof rootRoute
+    '/appLayout/setting': {
+      id: '/appLayout/setting'
+      path: '/setting'
+      fullPath: '/appLayout/setting'
+      preLoaderRoute: typeof AppLayoutSettingImport
+      parentRoute: typeof AppLayoutRouteImport
     }
     '/image-gallery/$imgId': {
       id: '/image-gallery/$imgId'
       path: '/image-gallery/$imgId'
       fullPath: '/image-gallery/$imgId'
       preLoaderRoute: typeof ImageGalleryImgIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/user/profile': {
-      id: '/user/profile'
-      path: '/user/profile'
-      fullPath: '/user/profile'
-      preLoaderRoute: typeof UserProfileImport
-      parentRoute: typeof rootRoute
-    }
-    '/user/user': {
-      id: '/user/user'
-      path: '/user/user'
-      fullPath: '/user/user'
-      preLoaderRoute: typeof UserUserImport
       parentRoute: typeof rootRoute
     }
     '/image-gallery/': {
@@ -121,90 +109,107 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ImageGalleryIndexImport
       parentRoute: typeof rootRoute
     }
+    '/appLayout/user/': {
+      id: '/appLayout/user/'
+      path: '/user'
+      fullPath: '/appLayout/user'
+      preLoaderRoute: typeof AppLayoutUserIndexImport
+      parentRoute: typeof AppLayoutRouteImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AppLayoutRouteRouteChildren {
+  AppLayoutSettingRoute: typeof AppLayoutSettingRoute
+  AppLayoutUserIndexRoute: typeof AppLayoutUserIndexRoute
+}
+
+const AppLayoutRouteRouteChildren: AppLayoutRouteRouteChildren = {
+  AppLayoutSettingRoute: AppLayoutSettingRoute,
+  AppLayoutUserIndexRoute: AppLayoutUserIndexRoute,
+}
+
+const AppLayoutRouteRouteWithChildren = AppLayoutRouteRoute._addFileChildren(
+  AppLayoutRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/appLayout': typeof AppLayoutRouteRouteWithChildren
   '/home': typeof HomeRoute
-  '/post': typeof PostLazyRoute
+  '/appLayout/setting': typeof AppLayoutSettingRoute
   '/image-gallery/$imgId': typeof ImageGalleryImgIdRoute
-  '/user/profile': typeof UserProfileRoute
-  '/user/user': typeof UserUserRoute
   '/image-gallery': typeof ImageGalleryIndexRoute
+  '/appLayout/user': typeof AppLayoutUserIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/appLayout': typeof AppLayoutRouteRouteWithChildren
   '/home': typeof HomeRoute
-  '/post': typeof PostLazyRoute
+  '/appLayout/setting': typeof AppLayoutSettingRoute
   '/image-gallery/$imgId': typeof ImageGalleryImgIdRoute
-  '/user/profile': typeof UserProfileRoute
-  '/user/user': typeof UserUserRoute
   '/image-gallery': typeof ImageGalleryIndexRoute
+  '/appLayout/user': typeof AppLayoutUserIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/appLayout': typeof AppLayoutRouteRouteWithChildren
   '/home': typeof HomeRoute
-  '/post': typeof PostLazyRoute
+  '/appLayout/setting': typeof AppLayoutSettingRoute
   '/image-gallery/$imgId': typeof ImageGalleryImgIdRoute
-  '/user/profile': typeof UserProfileRoute
-  '/user/user': typeof UserUserRoute
   '/image-gallery/': typeof ImageGalleryIndexRoute
+  '/appLayout/user/': typeof AppLayoutUserIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/appLayout'
     | '/home'
-    | '/post'
+    | '/appLayout/setting'
     | '/image-gallery/$imgId'
-    | '/user/profile'
-    | '/user/user'
     | '/image-gallery'
+    | '/appLayout/user'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/appLayout'
     | '/home'
-    | '/post'
+    | '/appLayout/setting'
     | '/image-gallery/$imgId'
-    | '/user/profile'
-    | '/user/user'
     | '/image-gallery'
+    | '/appLayout/user'
   id:
     | '__root__'
     | '/'
+    | '/appLayout'
     | '/home'
-    | '/post'
+    | '/appLayout/setting'
     | '/image-gallery/$imgId'
-    | '/user/profile'
-    | '/user/user'
     | '/image-gallery/'
+    | '/appLayout/user/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppLayoutRouteRoute: typeof AppLayoutRouteRouteWithChildren
   HomeRoute: typeof HomeRoute
-  PostLazyRoute: typeof PostLazyRoute
   ImageGalleryImgIdRoute: typeof ImageGalleryImgIdRoute
-  UserProfileRoute: typeof UserProfileRoute
-  UserUserRoute: typeof UserUserRoute
   ImageGalleryIndexRoute: typeof ImageGalleryIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppLayoutRouteRoute: AppLayoutRouteRouteWithChildren,
   HomeRoute: HomeRoute,
-  PostLazyRoute: PostLazyRoute,
   ImageGalleryImgIdRoute: ImageGalleryImgIdRoute,
-  UserProfileRoute: UserProfileRoute,
-  UserUserRoute: UserUserRoute,
   ImageGalleryIndexRoute: ImageGalleryIndexRoute,
 }
 
@@ -219,34 +224,38 @@ export const routeTree = rootRoute
       "filePath": "__root.jsx",
       "children": [
         "/",
+        "/appLayout",
         "/home",
-        "/post",
         "/image-gallery/$imgId",
-        "/user/profile",
-        "/user/user",
         "/image-gallery/"
       ]
     },
     "/": {
       "filePath": "index.jsx"
     },
+    "/appLayout": {
+      "filePath": "appLayout/route.jsx",
+      "children": [
+        "/appLayout/setting",
+        "/appLayout/user/"
+      ]
+    },
     "/home": {
       "filePath": "home.jsx"
     },
-    "/post": {
-      "filePath": "post.lazy.jsx"
+    "/appLayout/setting": {
+      "filePath": "appLayout/setting.jsx",
+      "parent": "/appLayout"
     },
     "/image-gallery/$imgId": {
       "filePath": "image-gallery/$imgId.jsx"
     },
-    "/user/profile": {
-      "filePath": "user/profile.jsx"
-    },
-    "/user/user": {
-      "filePath": "user/user.jsx"
-    },
     "/image-gallery/": {
       "filePath": "image-gallery/index.jsx"
+    },
+    "/appLayout/user/": {
+      "filePath": "appLayout/user/index.jsx",
+      "parent": "/appLayout"
     }
   }
 }

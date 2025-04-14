@@ -1,22 +1,30 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useNavigate, useRouter, Link } from '@tanstack/react-router';
 import { picSumApi } from '../../service/picSumApi';
+import { useQuery } from '@tanstack/react-query';
 
 export const Route = createFileRoute('/image-gallery/')({
   component: RouteComponent,
-  loader: async () => {
-      console.log("prefetching the data ...");
-      const data = await picSumApi();
-      console.log("data prefetched !");
-      // console.log(data);
-      return { data };
-    }
+  // loader: async () => {
+  //     console.log("prefetching the data ...");
+  //     const data = await picSumApi();
+  //     console.log("data prefetched !");
+  //     // console.log(data);
+  //     return { data };
+  //   }
 })
 
 function RouteComponent() {
   const navigate = useNavigate();
     const router = useRouter();
-    const photos = Route.useLoaderData();
+    // const photos = Route.useLoaderData();
+
+    const {isPending, isError, data, error, fetchStatus } = useQuery({queryKey: ['photos'], queryFn: async () =>{ 
+      const data = await picSumApi()
+      return data
+    }}); 
+    console.log("data from useQuery", data)
+    console.log("fetchStatus", fetchStatus)
   
     const handleNavigateToLogin = () => navigate({ to: '/' });
     
@@ -28,8 +36,19 @@ function RouteComponent() {
         .catch((error) => console.log(error, "Sorry, prefetch unsuccessful"));
     };
     
+    
     const handleHomeRoute = () => navigate({ to: '/home' });
+
+    if (isPending) {
+      return <span className='text-white'>Loading...</span>
+    }
   
+    if (isError) {
+      return <span  className='text-white'>Error: {error.message}</span>
+    }
+
+    
+
     return (
       <>
         <div className="flex items-center justify-center min-h-screen">
@@ -39,11 +58,12 @@ function RouteComponent() {
             </h1>
   
             <div className="flex flex-wrap justify-center gap-6">
-              {photos.data.map((image) => (
+              {data.map((image) => (
                 <div
                   onClick={() => handleFullView(image.id)}
                   key={image.id}
-                  className="w-72 image-card bg-[#1e1e2f] rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-purple-600 hover:scale-105 hover:shadow-2xl"
+                  className="w-72 image-card bg-[#1e1e2f] rounded-lg overflow-hidden shadow-lg transform transition-all 
+                  duration-300 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-purple-600 hover:scale-105 hover:shadow-2xl"
                 >
                   <Link to="/image-gallery/$imgId"
                   params={{ imgId: image.id }}>
